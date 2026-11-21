@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: the city is data and geometry only — the same
+// seeded layout drives the game, the collisions and the minimap.
 // Vista Palmera itself: a seeded grid city of pastel blocks, parks and parking lots,
 // a beach and the sea to the east, named landmarks, and the collision/road helpers
 // every other system uses. Pure data and geometry — no drawing, no browser.

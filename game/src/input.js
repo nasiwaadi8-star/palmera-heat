@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: the controls are WASD + mouse, and this file is
+// the only place that knows the key codes — the loop only sees held keys and action flags.
 // Keyboard and mouse input. Movement keys are polled as a held set; one-shot actions
 // (interact, pause, confirm, punch) are queued as bit flags and consumed once by the loop,
 // so a press between frames is never lost. The mouse position is tracked in page pixels

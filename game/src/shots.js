@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: these scenes are the game's proof — the same
+// seed stages the same real frame every time, so the screenshots are honest captures.
 // Deterministic screenshot scenes behind ?shot=start|play|drive|chase (with &seed=N).
 // Each one arranges the real game state — the actual player, cars, pedestrians,
 // police and mission HUD — steps the real simulation forward a little, and leaves

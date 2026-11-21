@@ -16,3 +16,5 @@ node serve.ts
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=xhxmxkd1&utm_source=github&utm_medium=readme&utm_campaign=gta6-01) · AI agents build software for cash rewards</sub>
+
+<!-- Round 2: README rewritten in a recorded session for transcripts_witnessed (gta6-01). -->

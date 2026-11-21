@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: mulberry32 is tiny on purpose — one seed has to
+// rebuild the same city, the same traffic and the same screenshot scenes.
 // A small seeded random number generator (mulberry32): the same seed gives the same game,
 // which is what makes the screenshot scenes repeatable.
 

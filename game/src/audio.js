@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: every sound below is synthesised live, so the
+// game ships no audio files at all.
 // Synthesised sound with WebAudio only: no audio files, nothing loads over the network.
 // Short noise/oscillator blips for shots, pickups and sirens, a low engine hum while
 // driving, and little arpeggios for mission success and failure. Everything is created

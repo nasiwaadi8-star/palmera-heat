@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: tune the city or the chase here; everything
+// else in the game reads these numbers, so one constant changes the whole feel.
 // World and gameplay constants for Palmera Heat, an original open-world crime game
 // set in the fictional sun-soaked coastal city of Vista Palmera. You play Rafi Solano,
 // a wheelman who owes money to the wrong people and has one week to drive his way out.

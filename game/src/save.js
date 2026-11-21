@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: saves are deliberately boring — one versioned
+// localStorage key, and anything unreadable is treated as "no save".
 // Save games in localStorage: cash, story progress, position, the car you were driving
 // and which cash stashes you already found. Versioned under one key; anything unreadable
 // is treated as "no save" rather than breaking the game.

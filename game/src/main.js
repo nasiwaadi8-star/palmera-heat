@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: this file is the game's heart — boot, the
+// fixed-step loop and the whole simulation — while drawing lives in render.js.
 // Palmera Heat: boot, the fixed-step loop, and the whole simulation — driving,
 // walking, traffic, pedestrians, police and wanted level, combat, missions,
 // the chop shop, stashes, saving. Drawing lives in render.js; staged

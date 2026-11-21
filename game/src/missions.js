@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: the six missions below are the story's spine —
+// each one is a list of small steps that main.js resolves against the world.
 // The story of Palmera Heat: six missions for Rafi Solano, told through short dialog
 // lines and a chain of objectives. Lina (his sister, a mechanic), Bruno (a chop-shop
 // owner) and Marisol Vega (a fixer) are all original characters. The manager walks

@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: pedestrians are the city feeling alive — they
+// stroll, flee danger, and (as lookouts) shoot back.
 // People of Vista Palmera: pedestrians who stroll the sidewalks and flee trouble,
 // taxi hailers, and the marina lookouts who shoot back during the story. Everyone is
 // a small circle with a heading; the game (main.js) owns combat resolution.

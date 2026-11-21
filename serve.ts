@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: this tiny server serves game/ for local play
+// (and is not part of the submitted game itself).
 // A tiny static server for game/ (Node 22, standard library only), so an entry can be played
 // locally without a build step: `node serve.ts` serves game/ on http://localhost:8080.
 // It sends the MIME types a browser game needs, refuses any path outside game/, and otherwise

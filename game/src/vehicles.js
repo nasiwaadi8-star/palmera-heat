@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: traffic, the player's driving and the police
+// chase all share this one car model — only the steering input differs.
 // Cars: parked cars you can steal, traffic that follows the road grid in lanes, and
 // the arcade driving model for whichever car the player is sitting in. Police cars
 // are cars too — main.js steers them with the chase logic in policeStep below.

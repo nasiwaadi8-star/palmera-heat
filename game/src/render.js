@@ -1,3 +1,5 @@
+// Palmera Heat — round 2 recorded rewrite: Vista Palmera at golden hour, drawn one frame at
+// a time — city, cars, people, HUD, minimap and every menu panel.
 // Drawing only: the city, cars, people, effects, the HUD with its minimap, and the
 // menu panels for each screen. Warm sunset palette, long building shadows, a beach
 // and the sea — Vista Palmera at golden hour, every frame.

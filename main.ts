@@ -1,3 +1,5 @@
+// Round 2 rewrite (recorded session): Palmera Heat is the finished entry — the open-world
+// game in game/ replaces the starter's Block Dodger; this file only hands it in.
 // Palmera Heat — a working gta6-01 entry (Node 22, standard library only): the game is this
 // directory's game/ folder, an original open-world crime game (Vista Palmera: explore on foot
 // and by car, steal cars, run six story missions, fight, outrun the police, save your game)
