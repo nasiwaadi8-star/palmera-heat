@@ -1,1 +1,11 @@
+# Palmera Heat — repo housekeeping
+node_modules/
 out/
+dist/
+*.log
+*.tmp
+.env
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

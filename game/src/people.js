@@ -1,69 +1,98 @@
-// Palmera Heat — round 2 recorded rewrite: pedestrians are the city feeling alive — they
-// stroll, flee danger, and (as lookouts) shoot back.
-// People of Vista Palmera: pedestrians who stroll the sidewalks and flee trouble,
-// taxi hailers, and the marina lookouts who shoot back during the story. Everyone is
-// a small circle with a heading; the game (main.js) owns combat resolution.
-import { CELL, ROAD } from './config.js';
-import { collideBuildings, isOnRoad } from './world.js';
+// people.js — the pedestrians of Vista Palmera: they stroll the sidewalks,
+// the park and the beach, pick a new corner when they arrive, and run for
+// their lives when the city's crime comes too close.
 
-const SHIRTS = ['#ff8fa3', '#ffd166', '#8ecae6', '#95d5b2', '#f9c74f', '#c8b6ff', '#ffafcc', '#a7c957'];
+import { PALETTE } from './config.js';
+import { circleHitsSolid, randomWalkPoint } from './world.js';
 
-let pedSeq = 1;
-export function makePed(random, x, y) {
+export function makePed(rng, x, y) {
   return {
-    id: pedSeq++, x, y, r: 9, angle: random() * Math.PI * 2,
-    shirt: SHIRTS[Math.floor(random() * SHIRTS.length)],
-    speed: 42 + random() * 30, state: 'walk', tx: x, ty: y, wait: 0,
-    hostile: false, hp: 3, fireTimer: 0, hail: false, dead: false, inCar: false,
+    x, y,
+    angle: rng.angle(),
+    speed: 0,
+    walkSpeed: rng.range(38, 68),
+    state: 'walk', // 'walk' | 'flee' | 'down'
+    tx: x, ty: y,
+    waitTimer: rng.range(0, 2),
+    downTimer: 0,
+    phase: rng.range(0, Math.PI * 2), // walk-cycle swing
+    shirt: rng.pick(PALETTE.pedShirts),
+    pants: rng.pick(['#2c3e50', '#7f5539', '#e8e2cf', '#34495e', '#935116']),
+    skin: rng.pick(['#f1c27d', '#e0ac69', '#c68642', '#8d5524', '#ffdbac']),
   };
 }
 
-export function spawnPedsAround(random, cx, cy, count, existing) {
-  const peds = [];
-  let guard = 0;
-  while (peds.length < count && guard < count * 30) {
-    guard += 1;
-    const x = cx + (random() - 0.5) * 1500;
-    const y = cy + (random() - 0.5) * 1100;
-    if (x < 30 || y < 30 || isOnRoad(x, y)) continue;
-    const p = makePed(random, x, y);
-    if (!existing.some((o) => Math.hypot(o.x - x, o.y - y) < 26)) peds.push(p);
+export function knockDown(ped) {
+  if (ped.state !== 'down') {
+    ped.state = 'down';
+    ped.downTimer = 2.4;
+    ped.speed = 0;
   }
-  return peds;
 }
 
-function pickStrollTarget(ped, random) {
-  // Stroll to a nearby sidewalk point: just inside a block edge.
-  const bx = Math.floor(ped.x / CELL) * CELL; const by = Math.floor(ped.y / CELL) * CELL;
-  ped.tx = bx + ROAD + 8 + random() * 190;
-  ped.ty = by + ROAD + 8 + random() * 190;
-}
+/**
+ * Move one pedestrian. `threat` is {x, y} of something scary nearby (a
+ * speeding car, a fight) or null. Movement slides along walls.
+ */
+export function updatePed(ped, dt, world, rng, threat) {
+  ped.phase += dt * (2 + Math.abs(ped.speed) * 0.09);
 
-export function pedStep(ped, dt, random, danger) {
-  if (ped.dead || ped.inCar) return;
-  let speed = ped.speed;
-  if (danger && Math.hypot(danger.x - ped.x, danger.y - ped.y) < 190) ped.state = 'flee';
-  if (ped.state === 'flee') {
-    const dx = ped.x - danger.x; const dy = ped.y - danger.y;
-    const d = Math.hypot(dx, dy) || 1;
-    ped.tx = ped.x + (dx / d) * 200; ped.ty = ped.y + (dy / d) * 200;
-    speed = 128;
-    if (d > 260) ped.state = 'walk';
+  if (ped.state === 'down') {
+    ped.downTimer -= dt;
+    if (ped.downTimer <= 0) ped.state = 'flee';
+    return;
   }
-  const dx = ped.tx - ped.x; const dy = ped.ty - ped.y;
-  const dist = Math.hypot(dx, dy);
-  if (dist < 8) { pickStrollTarget(ped, random); return; }
-  ped.angle = Math.atan2(dy, dx);
-  const probe = { x: ped.x + Math.cos(ped.angle) * speed * dt, y: ped.y + Math.sin(ped.angle) * speed * dt, r: ped.r };
-  collideBuildings({ buildings: pedCity.buildings, }, probe);
-  ped.x = probe.x; ped.y = probe.y;
-}
-// The city is set once by main.js so pedestrians collide with the same buildings.
-const pedCity = { buildings: [] };
-export function setPedCity(city) { pedCity.buildings = city.buildings; }
 
-export function makeHostile(x, y, name) {
-  const ped = makePed(Math.random, x, y);
-  ped.hostile = true; ped.name = name; ped.shirt = '#37474f'; ped.speed = 30;
-  return ped;
+  const threatDist = threat ? Math.hypot(threat.x - ped.x, threat.y - ped.y) : Infinity;
+  if (threatDist < 170) ped.state = 'flee';
+  else if (ped.state === 'flee' && threatDist > 260) ped.state = 'walk';
+
+  let moveX = 0;
+  let moveY = 0;
+  let speed = 0;
+
+  if (ped.state === 'flee' && threat) {
+    const away = Math.atan2(ped.y - threat.y, ped.x - threat.x);
+    moveX = Math.cos(away);
+    moveY = Math.sin(away);
+    speed = 152;
+    ped.angle = turnToward(ped.angle, away, dt * 10);
+  } else {
+    const dx = ped.tx - ped.x;
+    const dy = ped.ty - ped.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 8 || ped.waitTimer > 4) {
+      const spot = randomWalkPoint(rng, world, ped.x, ped.y, 9);
+      if (spot) { ped.tx = spot.x; ped.ty = spot.y; }
+      ped.waitTimer = 0;
+    } else {
+      moveX = dx / dist;
+      moveY = dy / dist;
+      speed = ped.walkSpeed;
+      ped.angle = turnToward(ped.angle, Math.atan2(dy, dx), dt * 8);
+    }
+    ped.waitTimer += dt;
+  }
+
+  ped.speed = speed;
+  if (speed === 0) return;
+  const nx = ped.x + moveX * speed * dt;
+  const ny = ped.y + moveY * speed * dt;
+  if (!circleHitsSolid(world, nx, ny, 9)) {
+    ped.x = nx;
+    ped.y = ny;
+  } else if (!circleHitsSolid(world, nx, ped.y, 9)) {
+    ped.x = nx;
+  } else if (!circleHitsSolid(world, ped.x, ny, 9)) {
+    ped.y = ny;
+  } else if (ped.state === 'walk') {
+    ped.waitTimer = 99; // bumped into a wall: pick a new target next tick
+  }
+}
+
+function turnToward(angle, target, maxStep) {
+  let diff = target - angle;
+  while (diff > Math.PI) diff -= Math.PI * 2;
+  while (diff < -Math.PI) diff += Math.PI * 2;
+  return angle + Math.max(-maxStep, Math.min(maxStep, diff));
 }
